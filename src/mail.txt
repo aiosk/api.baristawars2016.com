@@ -1,0 +1,7 @@
+Dear {{name}}
+
+You have been registered on BARISTAWARS2016.com. Here is your data
+
+    ID Card No.     : {{idcard}}
+    Name            : {{name}}
+    Registration on : {{datetime}}
