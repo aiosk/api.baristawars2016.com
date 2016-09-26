@@ -28,9 +28,6 @@ $app->get('/helper/time', function ($request, $response, $args) {
     $response->withJson($data);
 
     return $response;
-//        ->withHeader('Access-Control-Allow-Origin', '*')
-//        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-//        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
 
