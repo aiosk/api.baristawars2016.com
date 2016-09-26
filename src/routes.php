@@ -210,7 +210,7 @@ LIMIT 1");
             $st->execute([
                 ':id' => $v['id'],
                 ':job' => 'registration',
-                ':body' => 'body',
+                ':body' => $body,
                 ':sent' => $result,
             ]);
 
