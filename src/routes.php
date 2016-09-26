@@ -10,7 +10,7 @@ $app->get('/helper/time', function ($request, $response, $args) {
 
     $now = new DateTime("now");
     $registration = [
-        'start' => new DateTime('2016-09-20 00:00:00'),
+        'start' => new DateTime('2016-09-25 00:00:00'),
         'end' => new DateTime('2016-09-30 23:59:59'),
     ];
 
@@ -48,24 +48,11 @@ $app->post('/registration', function ($request, $response) {
     try {
         $data = $request->getParsedBody();
 
-//        foreach (['idcard', 'name', 'email'] as $v) {
-//            $text = ucfirst($v);
-//            if ($v == 'idcard') {
-//                $text = 'ID card';
-//            }
-//            $data[$v] = filter_var(trim($data[$v]), FILTER_SANITIZE_STRING);
-//            if (empty($data[$v])) {
-//                $exceptionElement = $v;
-//                throw new Exception(ucfirst($text) . " is empty");
-//            }
-//        }
-
         $data['address'] = filter_var(trim($data['address']), FILTER_SANITIZE_STRING);
 
         $formElement = 'idcard';
         formIsEmpty($data, $formElement);
-        formIsValidRegexp($data, $formElement, '^[0-9]{16}$');
-//        formIsValidlength($data, $formElement, 16);
+        formIsValidRegexp($data, $formElement, '^[0-9]{12,}$');
 
         $formElement = 'name';
         formIsEmpty($data, $formElement);
