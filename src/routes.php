@@ -10,8 +10,8 @@ $app->get('/helper/time', function ($request, $response, $args) {
 
     $now = new DateTime("now");
     $registration = [
-        'start' => new DateTime('2016-09-25 00:00:00'),
-        'end' => new DateTime('2016-09-30 23:59:59'),
+        'start' => new DateTime('2016-09-29 00:00:00'),
+        'end' => new DateTime('2016-10-07 23:59:59'),
     ];
 
 
@@ -59,10 +59,6 @@ $app->post('/registration', function ($request, $response) {
         formIsEmpty($data, $formElement);
         formIsValidEmail($data, $formElement);
 
-        $formElement = 'dob';
-        formIsEmpty($data, $formElement);
-        formIsValidRegexp($data, $formElement, '\d{4}\-\d{2}\-\d{2}');
-
         $formElement = '';
         $st = $this->db->prepare("SELECT count(id) total FROM user WHERE email=:email and idcard=:idcard");
         $st->execute([
@@ -75,6 +71,18 @@ $app->post('/registration', function ($request, $response) {
         if ((int)$user_exist['total'] > 0) {
             throw new Exception($data['email'] . " and ID card already registered");
         }
+
+        $formElement = 'dob';
+        formIsEmpty($data, $formElement);
+        formIsValidRegexp($data, $formElement, '\d{4}\-\d{2}\-\d{2}');
+
+        $formElement = 'gender';
+        formIsEmpty($data, $formElement);
+        formIsValidRegexp($data, $formElement, '(?:male|female)');
+
+        $formElement = 'position';
+        formIsEmpty($data, $formElement);
+        formIsValidRegexp($data, $formElement, '(?:owner|barista|independent)');
 
         $files = $request->getUploadedFiles();
         $formElement = 'picture';
@@ -96,20 +104,22 @@ $app->post('/registration', function ($request, $response) {
         if (!empty($data['coffeeshop_location'])) {
             $location = json_decode($data['coffeeshop_location']);
 
-            $st = $this->db->prepare("SELECT id FROM coffeeshop WHERE name=:name");
+            $st = $this->db->prepare("SELECT id FROM coffeeshop WHERE name=:name and place_id=:place_id");
 
-            $st->execute([':name' => $location->name]);
+            $st->execute([
+                ':name' => $location->name,
+                ':place_id' => $location->place_id
+            ]);
             $coffeeshop_exist = $st->fetch();
 
             if (empty($coffeeshop_exist)) {
-                $st = $this->db->prepare("INSERT INTO coffeeshop (name,location) VALUES (:name, :location)");
+                $st = $this->db->prepare("INSERT INTO coffeeshop (name,location,geometry,vicinity,place_id) VALUES (:name, :location,:geometry,:vicinity,:place_id)");
                 $st->execute([
                     ':name' => $location->name,
-                    ':location' => json_encode([
-                        'lat' => $location->lat,
-                        'lng' => $location->lng,
-                        'vicinity' => $location->vicinity,
-                    ]),
+                    ':location' => $location->location,
+                    ':geometry' => $location->geometry,
+                    ':vicinity' => $location->vicinity,
+                    ':place_id' => $location->place_id,
                 ]);
 
                 $coffeeshop_id = $this->db->lastInsertId();
@@ -131,7 +141,7 @@ $app->post('/registration', function ($request, $response) {
             ':regtime' => $now->format($format),
         ]);
 
-        $q = "INSERT INTO user_detail (user_id,name,dob,address,picture) VALUES (:id,:name,:dob,:address,:picture)";
+        $q = "INSERT INTO user_detail (user_id,name,dob,address,picture,gender,position) VALUES (:id,:name,:dob,:address,:picture,:gender,:position)";
         $st = $this->db->prepare($q);
         $st->execute([
             ':id' => $this->db->lastInsertId(),
@@ -139,6 +149,8 @@ $app->post('/registration', function ($request, $response) {
             ':dob' => $data['dob'],
             ':address' => $data['address'],
             ':picture' => $fileLoc,
+            ':gender' => $data['gender'],
+            ':position' => $data['position'],
         ]);
 
     } catch (Exception $e) {
