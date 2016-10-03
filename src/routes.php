@@ -10,7 +10,7 @@ $app->get('/helper/time', function ($request, $response, $args) {
 
     $now = new DateTime("now");
     $registration = [
-        'start' => new DateTime('2016-09-29 00:00:00'),
+        'start' => new DateTime('2016-10-01 00:00:00'),
         'end' => new DateTime('2016-10-07 23:59:59'),
     ];
 
@@ -55,6 +55,10 @@ $app->post('/registration', function ($request, $response) {
         formIsEmpty($data, $formElement);
         formIsValidRegexp($data, $formElement, '^[a-zA-Z ]+$');
 
+        $formElement = 'gender';
+        formIsEmpty($data, $formElement);
+        formIsValidRegexp($data, $formElement, '(?:male|female)');
+		
         $formElement = 'email';
         formIsEmpty($data, $formElement);
         formIsValidEmail($data, $formElement);
@@ -76,14 +80,6 @@ $app->post('/registration', function ($request, $response) {
         formIsEmpty($data, $formElement);
         formIsValidRegexp($data, $formElement, '\d{4}\-\d{2}\-\d{2}');
 
-        $formElement = 'gender';
-        formIsEmpty($data, $formElement);
-        formIsValidRegexp($data, $formElement, '(?:male|female)');
-
-        $formElement = 'position';
-        formIsEmpty($data, $formElement);
-        formIsValidRegexp($data, $formElement, '(?:owner|barista|independent)');
-
         $files = $request->getUploadedFiles();
         $formElement = 'picture';
         $picture = $files['picture'];
@@ -99,6 +95,11 @@ $app->post('/registration', function ($request, $response) {
         } else {
             throw new Exception("Picture is empty");
         }
+		
+        $formElement = 'position';
+        formIsEmpty($data, $formElement);
+        formIsValidRegexp($data, $formElement, '(?:owner|barista|independent)');
+		
         $formElement = '';
         $coffeeshop_id = 0;
         if (!empty($data['coffeeshop_location'])) {
