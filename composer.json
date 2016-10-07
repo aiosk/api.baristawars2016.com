@@ -17,7 +17,9 @@
         "slim/php-view": "^2.0",
         "monolog/monolog": "^1.17",
         "tuupola/cors-middleware": "^0.5.2",
-        "swiftmailer/swiftmailer": "^5.4"
+        "swiftmailer/swiftmailer": "^5.4",
+        "tuupola/slim-jwt-auth": "^2.3",
+        "tuupola/base62": "^0.6.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=4.8 < 6.0"

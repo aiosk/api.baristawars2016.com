@@ -58,7 +58,7 @@ $app->post('/registration', function ($request, $response) {
         $formElement = 'gender';
         formIsEmpty($data, $formElement);
         formIsValidRegexp($data, $formElement, '(?:male|female)');
-		
+
         $formElement = 'email';
         formIsEmpty($data, $formElement);
         formIsValidEmail($data, $formElement);
@@ -95,11 +95,11 @@ $app->post('/registration', function ($request, $response) {
         } else {
             throw new Exception("Picture is empty");
         }
-		
+
         $formElement = 'position';
         formIsEmpty($data, $formElement);
         formIsValidRegexp($data, $formElement, '(?:owner|barista|independent)');
-		
+
         $formElement = '';
         $coffeeshop_id = 0;
         if (!empty($data['coffeeshop_location'])) {
@@ -273,3 +273,67 @@ ORDER BY registration_time DESC");
 
     return $response;
 });
+
+use Firebase\JWT\JWT;
+use Tuupola\Base62;
+
+$app->group('/dashboard', function () {
+    $this->post("/token", function ($request, $response) {
+        /* Here generate and return JWT to the client. */
+        $data = $request->getParsedBody();
+        $response_data = [];
+
+        try {
+            $formElement = 'name';
+            formIsEmpty($data, $formElement);
+            $formElement = 'password';
+            formIsEmpty($data, $formElement);
+
+            $jti = Base62::encode(openssl_random_pseudo_bytes(16));
+            $now = new DateTime();
+            $future = new DateTime("now +2 hours");
+            $payload = [
+                "nbf" => $now->getTimeStamp(),
+                "iat" => $now->getTimeStamp(),
+                "exp" => $future->getTimeStamp(),
+                "jti" => $jti,
+                "iss" => 'baristawars2016.com',
+                "sub" => 'dashboard',
+                "aud" => $data["username"] . '@dashboard.baristawars2016.com',
+            ];
+            $secret = $this->get('settings')['jwt']['secret'];
+            $token = JWT::encode($payload, $secret, "HS256");
+
+            $response_data = [
+                'status' => true,
+                'token' => $token,
+                'profile' => [
+                    'username' => $param['username']
+                ]
+            ];
+        } catch (Exception $e) {
+            $response_data = [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+
+
+        $response->withJson($response_data);
+        return $response;
+    });
+    $this->post("/chart/gender/percentage", function ($request, $response) {
+//
+//        $param = $request->getParsedBody();
+//
+//        $token = JWT::decode($param['token'], $this->get('settings')['jwt']['secret'], ["HS256"]);
+//        console.log($token);
+        $response_data = [
+            'male' => 30,
+            'female' => 70,
+        ];
+        $response->withJson($response_data);
+        return $response;
+    });
+});
+

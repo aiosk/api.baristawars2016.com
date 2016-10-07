@@ -20,6 +20,9 @@ return [
             'timezone' => 'Asia/Jakarta',
             'format' => 'Y-m-d H:i:s',
         ],
+        'jwt' => [
+            'secret' => 'supersecretkeyyoushouldnotcommittogithub'
+        ],
 
         "db" => [
             "host" => "localhost",
