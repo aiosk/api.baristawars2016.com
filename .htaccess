@@ -1,1 +1,0 @@
-RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

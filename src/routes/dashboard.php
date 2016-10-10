@@ -58,24 +58,21 @@ $app->group('/dashboard', function () {
         return $response;
     });
     $this->get("/chart/gender/percentage", function ($request, $response) {
-//
-//        $param = $request->getParsedBody();
-//
-//        $token = JWT::decode($param['token'], $this->get('settings')['jwt']['secret'], ["HS256"]);
-//        console.log($token);
         $response_data = [
             'male' => 30,
             'female' => 70,
         ];
         $response->withJson($response_data);
         return $response;
+    });$this->get("/chart/gender/value", function ($request, $response) {
+        $response_data = [
+            'male' => 17,
+            'female' => 5,
+        ];
+        $response->withJson($response_data);
+        return $response;
     });
     $this->get("/chart/position/value", function ($request, $response) {
-//
-//        $param = $request->getParsedBody();
-//
-//        $token = JWT::decode($param['token'], $this->get('settings')['jwt']['secret'], ["HS256"]);
-//        console.log($token);
         $response_data = [
             'owner' => [
                 'items' => [
