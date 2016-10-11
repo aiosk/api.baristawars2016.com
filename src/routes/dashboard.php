@@ -57,14 +57,7 @@ $app->group('/dashboard', function () {
         $response->withJson($response_data);
         return $response;
     });
-    $this->get("/chart/gender/percentage", function ($request, $response) {
-        $response_data = [
-            'male' => 30,
-            'female' => 70,
-        ];
-        $response->withJson($response_data);
-        return $response;
-    });$this->get("/chart/gender/value", function ($request, $response) {
+	$this->get("/chart/gender", function ($request, $response) {
         $response_data = [
             'male' => 17,
             'female' => 5,
@@ -72,7 +65,16 @@ $app->group('/dashboard', function () {
         $response->withJson($response_data);
         return $response;
     });
-    $this->get("/chart/position/value", function ($request, $response) {
+	$this->get("/chart/age", function ($request, $response) {
+        $response_data = [
+            'items' => [12,34,2,234,5,43,1,342],
+            'average' => 29,
+            'total' => 5,
+        ];
+        $response->withJson($response_data);
+        return $response;
+    });
+    $this->get("/chart/position", function ($request, $response) {
         $response_data = [
             'owner' => [
                 'items' => [
