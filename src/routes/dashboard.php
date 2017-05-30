@@ -57,48 +57,84 @@ $app->group('/dashboard', function () {
         $response->withJson($response_data);
         return $response;
     });
-	$this->get("/chart/gender", function ($request, $response) {
-        $response_data = [
-            'male' => 17,
-            'female' => 5,
-        ];
-        $response->withJson($response_data);
-        return $response;
+
+    $this->group('/download', function () {
+        $this->get("/gender", function ($request, $response) {
+            $response_data = [
+                'male' => 17,
+                'female' => 5,
+            ];
+            $response->withJson($response_data);
+            return $response;
+        });
     });
-	$this->get("/chart/age", function ($request, $response) {
-        $response_data = [
-            'items' => [12,34,2,234,5,43,1,342],
-            'average' => 29,
-            'total' => 5,
-        ];
-        $response->withJson($response_data);
-        return $response;
+
+    $this->group('/chart', function () {
+        $this->get("/gender", function ($request, $response) {
+            $response_data = [
+                'items' => [
+                    'male' => 17,
+                    'female' => 5,
+                ],
+                'total' => 22,
+            ];
+            $response->withJson($response_data);
+            return $response;
+        });
+        $this->get("/age", function ($request, $response) {
+            $response_data = [
+                'items' => [12, 34, 2, 234, 5, 43, 1, 342],
+                'average' => 29,
+                'total' => 5,
+            ];
+            $response->withJson($response_data);
+            return $response;
+        });
+        $this->get("/position", function ($request, $response) {
+            $response_data = [
+                'items' => [
+                    'owner' => [
+                        'items' => [
+                            'male' => 12,
+                            'female' => 18,
+                        ],
+                        'total' => 30,
+                    ],
+                    'barista' => [
+                        'items' => [
+                            'male' => 43,
+                            'female' => 17,
+                        ],
+                        'total' => 60,
+                    ],
+                    'individu' => [
+                        'items' => [
+                            'male' => 52,
+                            'female' => 18,
+                        ],
+                        'total' => 70,
+                    ],
+                ],
+                'total' => 160,
+            ];
+            $response->withJson($response_data);
+            return $response;
+        });
+        $this->get("/maps", function ($request, $response) {
+
+            $response_data = [
+                'items' => [
+                    ['lat' => '-2342342', 'lng' => '-75623423'],
+                    ['lat' => '-2342342', 'lng' => '-75623423'],
+                    ['lat' => '-2342342', 'lng' => '-75623423'],
+                    ['lat' => '-2342342', 'lng' => '-75623423'],
+                    ['lat' => '-2342342', 'lng' => '-75623423'],
+                ],
+                'total' => 5,
+            ];
+            $response->withJson($response_data);
+            return $response;
+        });
     });
-    $this->get("/chart/position", function ($request, $response) {
-        $response_data = [
-            'owner' => [
-                'items' => [
-                    'male' => 12,
-                    'female' => 18,
-                ],
-                'total' => 30,
-            ],
-            'barista' => [
-                'items' => [
-                    'male' => 43,
-                    'female' => 17,
-                ],
-                'total' => 60,
-            ],
-            'individu' => [
-                'items' => [
-                    'male' => 52,
-                    'female' => 18,
-                ],
-                'total' => 70,
-            ],
-        ];
-        $response->withJson($response_data);
-        return $response;
-    });
+
 });
